@@ -70,7 +70,7 @@ def prepare_datasets():
     print(npzfile.files)
     x_train = npzfile['arr_0']
     y_train = npzfile['arr_1']
-    print(X_train.shape, y_train.shape)
+    print(x_train.shape, y_train.shape)
 
     npzfile = np.load('/content/drive/MyDrive/data/shuffled_valid.npz') #change path
     print(npzfile.files)
