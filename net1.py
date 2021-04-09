@@ -12,6 +12,7 @@ import sklearn as skl
 import sklearn.utils, sklearn.preprocessing, sklearn.decomposition, sklearn.svm
 import librosa
 import librosa.display
+import tensorflow as tf 
 
 import sys
 sys.path.append('/content/genre_classification')
@@ -125,22 +126,18 @@ def predict(model, x, y):
 x_train, x_validation, x_test, y_train, y_validation, y_test = prepare_datasets() #test size, validation size
 print("Dataset split")
 #build CNN net
-input_shape = (x_train[1].shape, x_train[2].shape, x_train[3].shape)
+input_shape = (x_train.shape[1], x_train.shape[2], x_train.shape[3])
 model = build_model(input_shape)
 print("Model built")
 #compile the network
 optimizer = keras.optimizers.Adam(learning_rate = 0.0001)
-model.compile(optimizer = optimizer, loss = "sparse_categorical_cross_entropy", metrics = ['accuracy'])
+model.compile(optimizer = optimizer, loss = "categorical_crossentropy", metrics = ['accuracy'])
 print("Network compiled")
 #train the network
 model.fit(x_train, y_train, validation_data = (x_validation, y_validation), batch_size = 32, epochs = 30)
 print("Network trained")
 #evaluate the CNN on test set
+y_test = tf.one_hot(y_test, 8)
 test_error, test_accuracy = model.evaluate(x_test, y_test, verbose = 1)
 print("Accuracy on test set : {}".format(test_accuracy))
 print("Evaluated")
-#make prediction on a sample
-x = x_test[100] #randomly select a number to test
-y = y_test[100]
-predict(model, x, y)
-print("Predicted")
