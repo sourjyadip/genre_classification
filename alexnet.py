@@ -95,7 +95,7 @@ def prepare_datasets():
 def build_model(input_shape):
     #create model
     model = keras.Sequential()
-    model.add(keras.layers.Conv2D(96, (11,11), strides=(20,4), activation = 'relu', input_shape = input_shape, padding ='same'))
+    model.add(keras.layers.Conv2D(96, (11,11), strides=(10,2), activation = 'relu', input_shape = input_shape, padding ='same'))
     model.add(keras.layers.BatchNormalization())
     model.add(keras.layers.MaxPool2D((3,3), strides = (2,2), padding = 'same'))
     
