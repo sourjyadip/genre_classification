@@ -73,26 +73,26 @@ def prepare_datasets():
     x_train = npzfile['arr_0']
     y_train = npzfile['arr_1']
     print(x_train.shape, y_train.shape)
-
+    
     npzfile = np.load('/content/drive/MyDrive/data/shuffled_valid.npz') #change path
     print(npzfile.files)
     x_validation = npzfile['arr_0']
     y_validation = npzfile['arr_1']
     print(x_validation.shape, y_validation.shape)
-
+    '''
     npzfile = np.load('/content/drive/MyDrive/data/test_arr.npz') #change path
     print(npzfile.files)
     x_test= npzfile['arr_0']
     y_test = npzfile['arr_1']
     print(x_test.shape, y_test.shape)
-
+    '''
+    x_train, x_test, y_train, y_test = train_test_split(x_train, y_train, test_size = 0.125)
 
 
     x_train = x_train[... , np.newaxis]
     x_validation = x_validation[... , np.newaxis]
     x_test = x_test[... , np.newaxis]
-    return x_train, x_validation, x_test, y_train, y_validation, y_test
-
+    return x_train, x_validation, x_test, y_train, y_validation, y_test 
 def build_model(input_shape):
     #create model
     model = keras.Sequential()
@@ -176,11 +176,12 @@ optimizer = keras.optimizers.Adam(learning_rate=0.0001)
 model.compile(optimizer = optimizer, loss = "categorical_crossentropy", metrics = [tf.keras.metrics.AUC()])
 print("Network compiled")
 #train the network
-print(x_train.shape)
+#print(x_train.shape)
+#y_validation = tf.one_hot(y_validation, 8)
 history = model.fit(x_train, y_train, validation_data = (x_validation, y_validation), batch_size = 32, shuffle=True, epochs = 20)
 #print("Network trained")
 #evaluate the CNN on test set
-y_test = tf.one_hot(y_test, 8)
+#y_test = tf.one_hot(y_test, 8)
 test_error, test_auc = model.evaluate(x_test, y_test, verbose = 1)
 print("AUC on test set : {}".format(test_auc))
 show_summary_stats(history)
